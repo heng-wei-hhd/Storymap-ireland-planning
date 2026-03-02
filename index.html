@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>爱尔兰海的看不见边界 — 后脱欧时代海洋治理断裂</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:wght@300;400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ocean-deep: #040e1a;
+    --ocean-mid: #071d33;
+    --ocean-surface: #0a3050;
+    --teal: #1a7a8a;
+    --teal-bright: #2abfcf;
+    --teal-glow: rgba(42,191,207,0.15);
+    --amber: #d4804a;
+    --amber-bright: #f0a060;
+    --cream: #e8dfc4;
+    --mist: #b0c8d4;
+    --text-main: #ccd8e0;
+    --text-dim: #7a9aaa;
+    --border: rgba(42,191,207,0.2);
+    --section-bg: rgba(10,48,80,0.5);
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--ocean-deep);
+    color: var(--text-main);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* ====== NAVIGATION ====== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(4,14,26,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 56px;
+  }
+  .nav-brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; color: var(--teal-bright); letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .nav-links {
+    display: flex; gap: 0.2rem; list-style: none;
+  }
+  .nav-links a {
+    color: var(--text-dim); text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 0.4rem 0.8rem;
+    border-radius: 2px; transition: all 0.2s;
+  }
+  .nav-links a:hover { color: var(--teal-bright); background: var(--teal-glow); }
+
+  /* ====== HERO ====== */
+  #hero {
+    position: relative; height: 100vh; min-height: 600px;
+    display: flex; align-items: flex-end;
+    overflow: hidden;
+  }
+
+  .hero-canvas {
+    position: absolute; inset: 0;
+    background: var(--ocean-deep);
+  }
+
+  /* Animated wave layers */
+  .wave-layer {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 70%; 
+    background: linear-gradient(to bottom, transparent 0%, var(--ocean-surface) 100%);
+    animation: waveDrift 12s ease-in-out infinite alternate;
+    transform-origin: bottom center;
+  }
+  .wave-layer:nth-child(2) { animation-delay: -4s; animation-duration: 16s; height: 55%; opacity: 0.6; }
+  .wave-layer:nth-child(3) { animation-delay: -8s; animation-duration: 20s; height: 40%; opacity: 0.4; }
+
+  @keyframes waveDrift {
+    0% { transform: scaleX(1.02) translateX(-1%); }
+    100% { transform: scaleX(0.98) translateX(1%); }
+  }
+
+  /* SVG Map of Ireland */
+  .hero-map {
+    position: absolute; right: 5%; top: 50%;
+    transform: translateY(-50%);
+    width: 340px; height: 420px;
+    opacity: 0.4;
+    animation: mapPulse 4s ease-in-out infinite alternate;
+  }
+  @keyframes mapPulse {
+    0% { opacity: 0.35; filter: drop-shadow(0 0 8px var(--teal)); }
+    100% { opacity: 0.55; filter: drop-shadow(0 0 20px var(--teal-bright)); }
+  }
+
+  /* Dotted grid overlay */
+  .grid-overlay {
+    position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(42,191,207,0.08) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+
+  /* Scanlines */
+  .scanline-overlay {
+    position: absolute; inset: 0; pointer-events: none;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px
+    );
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 6% 80px;
+    max-width: 700px;
+    animation: heroReveal 1.4s ease forwards;
+    opacity: 0; transform: translateY(30px);
+  }
+  @keyframes heroReveal {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--teal-bright); border: 1px solid var(--teal-bright);
+    padding: 0.25rem 0.75rem; margin-bottom: 1.5rem;
+    border-radius: 1px;
+    animation: heroReveal 1.4s 0.3s ease forwards; opacity: 0;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1.1; font-weight: 400;
+    color: #fff;
+    margin-bottom: 1.2rem;
+    animation: heroReveal 1.4s 0.5s ease forwards; opacity: 0;
+  }
+  .hero-title em { font-style: italic; color: var(--teal-bright); }
+
+  .hero-subtitle {
+    font-size: 1rem; color: var(--mist);
+    line-height: 1.7; max-width: 560px;
+    margin-bottom: 2rem;
+    animation: heroReveal 1.4s 0.7s ease forwards; opacity: 0;
+  }
+
+  .hero-scroll {
+    display: flex; align-items: center; gap: 0.75rem;
+    color: var(--text-dim); font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase;
+    animation: heroReveal 1.4s 1s ease forwards; opacity: 0;
+  }
+  .scroll-line {
+    width: 40px; height: 1px; background: var(--teal-bright);
+    animation: scrollLine 2s ease-in-out infinite alternate;
+  }
+  @keyframes scrollLine { 0% { width: 20px; opacity: 0.5; } 100% { width: 60px; opacity: 1; } }
+
+  /* ====== SECTION SHARED ====== */
+  section { position: relative; }
+
+  .section-inner {
+    max-width: 1100px; margin: 0 auto;
+    padding: 80px 6%;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--teal-bright); margin-bottom: 0.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .section-label::before {
+    content: ''; display: block;
+    width: 24px; height: 1px; background: var(--teal-bright);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.6rem);
+    font-weight: 400; line-height: 1.15;
+    color: #fff; margin-bottom: 1.5rem;
+  }
+
+  .section-divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(to right, var(--teal-bright), transparent);
+    margin: 0;
+  }
+
+  /* ====== EXECUTIVE SUMMARY ====== */
+  #summary {
+    background: linear-gradient(to bottom, var(--ocean-deep), var(--ocean-mid));
+  }
+
+  .summary-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 3rem; margin-top: 2rem;
+  }
+
+  .summary-lead {
+    font-size: 1.15rem; line-height: 1.9;
+    color: var(--cream);
+    border-left: 3px solid var(--teal-bright);
+    padding-left: 1.5rem;
+  }
+
+  .summary-annotation {
+    background: rgba(42,191,207,0.06);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    border-radius: 4px;
+  }
+  .annotation-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--amber-bright); margin-bottom: 0.8rem;
+  }
+  .annotation-item {
+    font-size: 0.85rem; color: var(--text-dim);
+    padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    line-height: 1.5;
+  }
+  .annotation-item:last-child { border-bottom: none; }
+  .annotation-item em { color: var(--mist); font-style: normal; }
+
+  /* ====== RESEARCH QUESTION ====== */
+  #question {
+    background: var(--ocean-mid);
+  }
+
+  .question-box {
+    background: linear-gradient(135deg, rgba(42,191,207,0.08) 0%, rgba(10,48,80,0.8) 100%);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--teal-bright);
+    padding: 2rem 2.5rem;
+    border-radius: 2px;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .question-box::before {
+    content: '?';
+    position: absolute; right: 2rem; top: 50%; transform: translateY(-50%);
+    font-family: 'Playfair Display', serif;
+    font-size: 8rem; color: rgba(42,191,207,0.05);
+    line-height: 1;
+  }
+  .question-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem; font-style: italic;
+    color: var(--cream); line-height: 1.7;
+    position: relative; z-index: 1;
+  }
+  .question-sub {
+    margin-top: 1rem; color: var(--text-dim); font-size: 0.9rem;
+    position: relative; z-index: 1;
+  }
+
+  .mechanism-chain {
+    display: flex; flex-wrap: wrap; align-items: center;
+    gap: 0.5rem; margin: 2rem 0;
+  }
+  .chain-node {
+    background: rgba(42,191,207,0.1);
+    border: 1px solid var(--teal);
+    color: var(--teal-bright);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem; padding: 0.4rem 0.8rem;
+    border-radius: 2px; white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .chain-node:hover { background: rgba(42,191,207,0.2); transform: translateY(-2px); }
+  .chain-arrow {
+    color: var(--teal-bright); font-size: 1rem; opacity: 0.6;
+  }
+
+  /* ====== SIDECAR SECTION ====== */
+  #institution {
+    background: linear-gradient(to bottom, var(--ocean-mid), var(--ocean-surface));
+  }
+
+  .sidecar {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0; min-height: 500px;
+    border: 1px solid var(--border);
+    border-radius: 4px; overflow: hidden;
+    margin: 2rem 0;
+  }
+
+  .sidecar-media {
+    background: var(--ocean-deep);
+    position: relative; overflow: hidden;
+    min-height: 380px;
+  }
+
+  .sidecar-map-svg {
+    width: 100%; height: 100%;
+    position: absolute; inset: 0;
+  }
+
+  .sidecar-narrative {
+    padding: 2.5rem;
+    background: rgba(7,29,51,0.95);
+    overflow-y: auto;
+  }
+
+  .slide-indicator {
+    display: flex; gap: 0.4rem; margin-bottom: 1.5rem;
+  }
+  .slide-dot {
+    width: 20px; height: 3px;
+    background: var(--border);
+    border-radius: 2px; cursor: pointer;
+    transition: all 0.3s;
+  }
+  .slide-dot.active { background: var(--teal-bright); width: 32px; }
+
+  .slide-content { display: none; }
+  .slide-content.active { display: block; }
+
+  .slide-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; color: #fff; margin-bottom: 1rem;
+  }
+
+  .slide-body { font-size: 0.9rem; color: var(--text-dim); line-height: 1.8; }
+  .slide-body p { margin-bottom: 0.8rem; }
+  .slide-body strong { color: var(--mist); font-weight: 600; }
+
+  .slide-nav-btns {
+    display: flex; gap: 0.5rem; margin-top: 1.5rem;
+  }
+  .slide-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em;
+    background: none; border: 1px solid var(--border);
+    color: var(--text-dim); padding: 0.4rem 1rem;
+    cursor: pointer; border-radius: 2px; transition: all 0.2s;
+  }
+  .slide-btn:hover, .slide-btn.active-btn { border-color: var(--teal-bright); color: var(--teal-bright); }
+
+  /* ====== AQUACULTURE SECTION ====== */
+  #aquaculture {
+    background: var(--ocean-surface);
+  }
+
+  .rupture-cards {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; margin: 2rem 0;
+  }
+
+  .rupture-card {
+    background: rgba(4,14,26,0.7);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    border-radius: 4px;
+    position: relative; overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .rupture-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(42,191,207,0.1);
+  }
+  .rupture-card::after {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  }
+  .card-rule::after { background: var(--teal-bright); }
+  .card-market::after { background: var(--amber-bright); }
+  .card-eco::after { background: #7cbf8a; }
+
+  .card-icon {
+    font-size: 2rem; margin-bottom: 0.8rem;
+  }
+  .card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--text-dim); margin-bottom: 0.5rem;
+  }
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; color: #fff; margin-bottom: 0.8rem;
+  }
+  .card-body { font-size: 0.83rem; color: var(--text-dim); line-height: 1.7; }
+
+  .evidence-tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.1em;
+    background: rgba(212,128,74,0.15); border: 1px solid rgba(212,128,74,0.4);
+    color: var(--amber-bright); padding: 0.15rem 0.5rem;
+    border-radius: 2px; margin-top: 0.8rem;
+  }
+
+  /* ====== POLLUTION SECTION ====== */
+  #pollution {
+    background: linear-gradient(to bottom, var(--ocean-surface), var(--ocean-mid));
+  }
+
+  .split-panel {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2rem; margin: 2rem 0;
+  }
+
+  .panel-box {
+    background: rgba(4,14,26,0.6);
+    border: 1px solid var(--border);
+    padding: 1.8rem; border-radius: 4px;
+  }
+  .panel-box-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em;
+    margin-bottom: 1rem; padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .ni-color { color: var(--teal-bright); }
+  .roi-color { color: var(--amber-bright); }
+
+  .data-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.83rem;
+  }
+  .data-row:last-child { border-bottom: none; }
+  .data-key { color: var(--text-dim); }
+  .data-val { color: var(--mist); font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; }
+  .data-gap { color: var(--amber-bright); font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; }
+
+  /* ====== FLOWCHART ====== */
+  #mechanism {
+    background: var(--ocean-mid);
+  }
+
+  .flowchart {
+    position: relative;
+    padding: 2rem 0;
+    overflow-x: auto;
+  }
+
+  .flow-row {
+    display: flex; justify-content: center;
+    align-items: flex-start; gap: 0; flex-wrap: nowrap;
+    margin-bottom: 0;
+  }
+
+  .flow-node {
+    background: rgba(7,29,51,0.9);
+    border: 1px solid var(--teal);
+    color: var(--teal-bright);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; text-align: center;
+    padding: 0.6rem 0.9rem; border-radius: 3px;
+    min-width: 110px; max-width: 130px;
+    position: relative;
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .flow-node:hover {
+    background: rgba(42,191,207,0.15);
+    border-color: var(--teal-bright);
+    transform: scale(1.05);
+    z-index: 10;
+  }
+  .flow-node.node-root {
+    background: rgba(42,191,207,0.15);
+    border-color: var(--teal-bright);
+    color: #fff;
+  }
+  .flow-node.node-outcome {
+    border-color: var(--amber);
+    color: var(--amber-bright);
+  }
+  .flow-node.node-end {
+    border-color: #7cbf8a; color: #7cbf8a;
+  }
+
+  .flow-arrow-h {
+    width: 30px; min-width: 30px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--teal); font-size: 0.9rem; padding-top: 0.6rem;
+  }
+
+  .flow-vertical {
+    display: flex; flex-direction: column;
+    align-items: center;
+  }
+  .flow-arrow-v {
+    width: 1px; height: 20px;
+    background: var(--teal); opacity: 0.5;
+    margin: 0 auto;
+  }
+
+  .flow-branch {
+    display: flex; gap: 1.5rem;
+    margin-top: 0;
+  }
+
+  /* ====== TABLES ====== */
+  #tables {
+    background: linear-gradient(to bottom, var(--ocean-mid), var(--ocean-deep));
+  }
+
+  .table-tabs {
+    display: flex; gap: 0.4rem; margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .tab-btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em;
+    background: none; border: 1px solid var(--border);
+    color: var(--text-dim); padding: 0.4rem 1rem;
+    cursor: pointer; border-radius: 2px; transition: all 0.2s;
+  }
+  .tab-btn.active { border-color: var(--teal-bright); color: var(--teal-bright); background: var(--teal-glow); }
+
+  .table-panel { display: none; }
+  .table-panel.active { display: block; }
+
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.83rem;
+  }
+  thead th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.12em;
+    color: var(--teal-bright);
+    padding: 0.8rem 1rem; text-align: left;
+    border-bottom: 2px solid var(--teal);
+    background: rgba(42,191,207,0.05);
+  }
+  tbody tr {
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    transition: background 0.15s;
+  }
+  tbody tr:hover { background: rgba(42,191,207,0.04); }
+  tbody td {
+    padding: 0.8rem 1rem; color: var(--text-dim);
+    vertical-align: top; line-height: 1.5;
+  }
+  tbody td:first-child { color: var(--mist); font-weight: 400; }
+  .gap-cell {
+    color: var(--amber-bright) !important;
+    font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+  }
+
+  /* ====== POLICY ====== */
+  #policy {
+    background: var(--ocean-deep);
+  }
+
+  .timeline-rows {
+    margin: 2rem 0;
+    position: relative;
+    padding-left: 2rem;
+  }
+  .timeline-rows::before {
+    content: ''; position: absolute;
+    left: 0; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(to bottom, var(--teal-bright), var(--teal), transparent);
+  }
+
+  .timeline-item {
+    position: relative; margin-bottom: 2rem;
+    padding-left: 1.5rem;
+  }
+  .timeline-item::before {
+    content: ''; position: absolute;
+    left: -2.5rem; top: 0.4rem;
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--teal-bright);
+    box-shadow: 0 0 0 3px rgba(42,191,207,0.2);
+  }
+
+  .timeline-period {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--teal-bright); margin-bottom: 0.4rem;
+  }
+  .timeline-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem; color: #fff; margin-bottom: 0.6rem;
+  }
+  .timeline-body { font-size: 0.87rem; color: var(--text-dim); line-height: 1.7; }
+
+  /* ====== CREDITS ====== */
+  #credits {
+    background: var(--ocean-deep);
+    border-top: 1px solid var(--border);
+  }
+
+  .credits-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem; margin-top: 1.5rem;
+  }
+  .credit-group-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.15em;
+    color: var(--teal-bright); margin-bottom: 1rem;
+    padding-bottom: 0.5rem; border-bottom: 1px solid var(--border);
+  }
+  .credit-item { font-size: 0.8rem; color: var(--text-dim); margin-bottom: 0.4rem; line-height: 1.5; }
+
+  .footer-bar {
+    margin-top: 3rem; padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem; color: var(--text-dim); letter-spacing: 0.1em;
+  }
+
+  /* ====== RESPONSIVENESS ====== */
+  @media (max-width: 768px) {
+    .summary-grid { grid-template-columns: 1fr; }
+    .sidecar { grid-template-columns: 1fr; }
+    .rupture-cards { grid-template-columns: 1fr; }
+    .split-panel { grid-template-columns: 1fr; }
+    .credits-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-map { display: none; }
+    .flow-branch { flex-direction: column; align-items: center; gap: 0.5rem; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1; transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+
+  /* Progress bar */
+  .progress-bar {
+    position: fixed; top: 56px; left: 0; right: 0; height: 2px;
+    background: rgba(255,255,255,0.05); z-index: 99;
+  }
+  .progress-fill {
+    height: 100%; background: var(--teal-bright);
+    width: 0%; transition: width 0.1s;
+  }
+
+  /* Tooltip for map */
+  .map-tooltip {
+    position: absolute; background: rgba(4,14,26,0.95);
+    border: 1px solid var(--teal-bright); color: var(--cream);
+    font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+    padding: 0.4rem 0.7rem; border-radius: 2px;
+    pointer-events: none; opacity: 0; transition: opacity 0.2s;
+    white-space: nowrap; z-index: 10;
+  }
+</style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav>
+  <div class="nav-brand">爱尔兰海 · 后脱欧治理研究</div>
+  <ul class="nav-links">
+    <li><a href="#summary">摘要</a></li>
+    <li><a href="#question">研究问题</a></li>
+    <li><a href="#institution">制度边界</a></li>
+    <li><a href="#aquaculture">海水养殖</a></li>
+    <li><a href="#pollution">污染治理</a></li>
+    <li><a href="#mechanism">断裂机制</a></li>
+    <li><a href="#tables">对比分析</a></li>
+    <li><a href="#policy">政策建议</a></li>
+    <li><a href="#credits">文献</a></li>
+  </ul>
+</nav>
+
+<div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-canvas">
+    <div class="wave-layer"></div>
+    <div class="wave-layer"></div>
+    <div class="wave-layer"></div>
+    <div class="grid-overlay"></div>
+    <div class="scanline-overlay"></div>
+
+    <!-- SVG Outline Map of Ireland and Northern Ireland -->
+    <svg class="hero-map" viewBox="0 0 340 420" xmlns="http://www.w3.org/2000/svg">
+      <!-- Irish Sea stippling -->
+      <defs>
+        <pattern id="seaDots" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+          <circle cx="6" cy="6" r="0.8" fill="rgba(42,191,207,0.3)"/>
+        </pattern>
+        <radialGradient id="niGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(42,191,207,0.4)"/>
+          <stop offset="100%" stop-color="rgba(42,191,207,0)"/>
+        </radialGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Background sea -->
+      <rect width="340" height="420" fill="url(#seaDots)" opacity="0.5"/>
+
+      <!-- Republic of Ireland (simplified outline) -->
+      <path d="M 100 60 
+               L 90 80 L 75 100 L 65 120 L 60 145 L 55 165
+               L 50 190 L 55 215 L 60 235 L 70 255
+               L 85 270 L 100 280 L 120 290 L 140 300
+               L 160 305 L 175 300 L 190 290 L 205 278
+               L 215 262 L 220 245 L 215 225 L 210 205
+               L 218 185 L 220 165 L 215 145 L 205 125
+               L 195 108 L 182 92 L 168 78 L 152 68
+               L 135 58 L 118 56 Z"
+            fill="rgba(10,48,80,0.6)" stroke="rgba(42,191,207,0.5)" stroke-width="1.5"/>
+
+      <!-- Northern Ireland (highlighted) -->
+      <path d="M 152 68 L 168 78 L 182 92 L 195 108
+               L 205 125 L 215 145 L 220 165
+               L 218 172 L 208 168 L 198 162 L 188 155
+               L 175 148 L 165 142 L 155 138 L 148 130
+               L 142 118 L 140 105 L 142 92 L 148 80 L 152 68 Z"
+            fill="rgba(42,191,207,0.25)" stroke="rgba(42,191,207,0.9)" stroke-width="2"
+            filter="url(#glow)"/>
+
+      <!-- Irish Sea (right) water lines -->
+      <path d="M 220 100 Q 260 130 255 180 Q 250 230 240 270" 
+            stroke="rgba(42,191,207,0.2)" stroke-width="1" fill="none" stroke-dasharray="4,6"/>
+      <path d="M 235 90 Q 280 125 275 185 Q 265 240 255 280" 
+            stroke="rgba(42,191,207,0.15)" stroke-width="1" fill="none" stroke-dasharray="4,6"/>
+
+      <!-- Border line NI / ROI -->
+      <path d="M 142 118 L 148 130 L 155 138 L 165 142 L 175 148 L 188 155 L 198 162 L 208 168 L 218 172"
+            stroke="#f0a060" stroke-width="2" fill="none" stroke-dasharray="6,4"/>
+
+      <!-- Label: NI -->
+      <text x="170" y="125" font-family="JetBrains Mono, monospace" font-size="9"
+            fill="rgba(42,191,207,0.9)" text-anchor="middle">北爱尔兰</text>
+      <!-- Label: ROI -->
+      <text x="130" y="220" font-family="JetBrains Mono, monospace" font-size="9"
+            fill="rgba(176,200,212,0.6)" text-anchor="middle">爱尔兰共和国</text>
+      <!-- Label: Irish Sea -->
+      <text x="268" y="185" font-family="JetBrains Mono, monospace" font-size="8"
+            fill="rgba(42,191,207,0.4)" text-anchor="middle" transform="rotate(-60, 268, 185)">爱尔兰海</text>
+
+      <!-- Belfast dot -->
+      <circle cx="196" cy="138" r="4" fill="var(--teal-bright)" opacity="0.9"/>
+      <text x="202" y="136" font-family="JetBrains Mono, monospace" font-size="7.5"
+            fill="rgba(255,255,255,0.7)">贝尔法斯特</text>
+
+      <!-- Dublin dot -->
+      <circle cx="185" cy="268" r="3.5" fill="var(--amber-bright)" opacity="0.9"/>
+      <text x="191" y="266" font-family="JetBrains Mono, monospace" font-size="7.5"
+            fill="rgba(255,255,255,0.7)">都柏林</text>
+
+      <!-- Legend: dashed line = land border -->
+      <line x1="50" y1="375" x2="80" y2="375" stroke="#f0a060" stroke-width="2" stroke-dasharray="6,4"/>
+      <text x="86" y="378" font-family="JetBrains Mono, monospace" font-size="7.5"
+            fill="rgba(240,160,96,0.7)">陆上边界</text>
+      <circle cx="53" cy="392" r="4" fill="var(--teal-bright)" opacity="0.7"/>
+      <text x="61" y="395" font-family="JetBrains Mono, monospace" font-size="7.5"
+            fill="rgba(42,191,207,0.7)">北爱港口</text>
+      <circle cx="53" cy="408" r="3.5" fill="var(--amber-bright)" opacity="0.7"/>
+      <text x="61" y="411" font-family="JetBrains Mono, monospace" font-size="7.5"
+            fill="rgba(240,160,96,0.7)">共和国港口</text>
+    </svg>
+  </div>
+
+  <div class="hero-content">
+    <div class="hero-tag">StoryMap · 海洋治理研究</div>
+    <h1 class="hero-title">
+      爱尔兰海的<em>看不见边界</em>
+    </h1>
+    <p class="hero-subtitle">
+      后脱欧时代北爱—爱尔兰共和国海洋养殖与污染治理的制度断裂：
+      当制度边界移入海洋，监管分叉如何将治理压力转化为产业风险与生态外部性？
+    </p>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      向下滚动探索
+    </div>
+  </div>
+</section>
+
+<!-- Executive Summary -->
+<section id="summary">
+  <div class="section-divider"></div>
+  <div class="section-inner">
+    <div class="section-label reveal">执行摘要</div>
+    <h2 class="section-title reveal">制度分叉如何转化为海洋风险</h2>
+
+    <div class="summary-grid">
+      <div class="summary-lead reveal reveal-delay-1">
+        在后脱欧安排下，北爱与爱尔兰共和国之间出现一种"地理上相邻、制度上分叉"的治理景观：海洋养殖（许可、产品合规、市场准入）与海洋污染（排放许可、监测指标、执法协同）的跨境链条，被新的边界实践重新排序。
+        <br><br>
+        本 StoryMap 用"制度安排 → 监管差异 → 交易与合规摩擦 → 产业行为变化 → 污染外部性与跨境治理压力"的因果链条组织叙事，把抽象的制度断裂落实到具体地点（港口、海峡、海湾、养殖区）与具体流程（许可—检验—运输—销售—监测—执法）。
+      </div>
+      <div class="summary-annotation reveal reveal-delay-2">
+        <div class="annotation-title">叙事理论依据 · Week 1–2 读物</div>
+        <div class="annotation-item">
+          <em>"故事 = 有序步骤序列；顺序与因果理解相关"</em><br>
+          — Kosara &amp; Mackinlay 2013：第1页
+        </div>
+        <div class="annotation-item">
+          <em>"图像不是文字替代，而需要语境"</em><br>
+          — Unwin 2020：第2页
+        </div>
+        <div class="annotation-item">
+          <em>"量化信息的图形表达与制图传统密切相关"</em><br>
+          — Friendly 2008：第2页
+        </div>
+        <div class="annotation-item">
+          <em>"可视化可被设计用于影响实践决策"</em><br>
+          — Friendly &amp; Andrews 2021（Nightingale 玫瑰图）
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Research Question -->
+<section id="question">
+  <div class="section-divider"></div>
+  <div class="section-inner">
+    <div class="section-label reveal">核心研究问题</div>
+    <h2 class="section-title reveal">断裂在哪里发生？通过什么机制？</h2>
+
+    <div class="question-box reveal">
+      <p class="question-text">
+        后脱欧框架如何在海洋空间中制造北爱—爱尔兰共和国之间的"断裂点"？这些断裂点分别通过哪些机制影响海水养殖与污染治理？
+      </p>
+      <p class="question-sub">
+        断裂不是抽象概念，而是会落到具体地点（港口、海峡、海湾、养殖区、排放口、监测站）与具体流程（许可—检验—运输—销售—监测—执法）上。
+      </p>
+    </div>
+
+    <div class="mechanism-chain reveal reveal-delay-1">
+      <div class="chain-node">制度安排变化</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node">海上边界/合规节点增加</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node">监管口径分叉</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node">交易与物流摩擦</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node">产业行为调整</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-node">生态外部性变化</div>
+    </div>
+  </div>
+</section>
+
+<!-- Sidecar / Institution -->
+<section id="institution">
+  <div class="section-divider"></div>
+  <div class="section-inner">
+    <div class="section-label reveal">沉浸式区块 I</div>
+    <h2 class="section-title reveal">制度边界如何"移动到海上"</h2>
+
+    <div class="sidecar reveal">
+      <!-- Media panel -->
+      <div class="sidecar-media" id="sidecarMedia">
+        <svg id="sidecarSvg" width="100%" height="100%" viewBox="0 0 400 380" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;">
+          <defs>
+            <pattern id="seaDots2" x="0" y="0" width="14" height="14" patternUnits="userSpaceOnUse">
+              <circle cx="7" cy="7" r="0.7" fill="rgba(42,191,207,0.2)"/>
+            </pattern>
+            <filter id="glow2">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+          <rect width="400" height="380" fill="#040e1a"/>
+          <rect width="400" height="380" fill="url(#seaDots2)"/>
+
+          <!-- Sea highlight region -->
+          <ellipse cx="285" cy="190" rx="80" ry="140" fill="rgba(42,191,207,0.04)"/>
+
+          <!-- ROI -->
+          <path d="M 95 50 L 82 72 L 68 95 L 58 120 L 52 148 L 48 175 L 52 202 L 60 225 L 72 245 L 88 260 L 108 272 L 130 280 L 152 285 L 170 280 L 186 268 L 198 252 L 204 232 L 200 210 L 208 188 L 210 165 L 204 140 L 192 118 L 178 98 L 162 82 L 144 68 L 125 56 Z"
+                fill="rgba(7,29,51,0.8)" stroke="rgba(42,191,207,0.4)" stroke-width="1.5" id="roiPath"/>
+
+          <!-- NI -->
+          <path d="M 144 68 L 162 82 L 178 98 L 192 118 L 204 140 L 210 160 
+                   L 200 158 L 190 152 L 178 144 L 166 137 L 155 130 L 146 120 L 140 107 L 140 93 Z"
+                fill="rgba(42,191,207,0.2)" stroke="rgba(42,191,207,0.8)" stroke-width="2"
+                filter="url(#glow2)" id="niPath"/>
+
+          <!-- Border -->
+          <path d="M 140 107 L 146 120 L 155 130 L 166 137 L 178 144 L 190 152 L 200 158 L 210 160"
+                stroke="#f0a060" stroke-width="2.5" fill="none" stroke-dasharray="6,4" id="borderPath"/>
+
+          <!-- Slide 1: sea boundary markers -->
+          <g id="slide1markers">
+            <circle cx="240" cy="120" r="5" fill="rgba(42,191,207,0.8)" filter="url(#glow2)"/>
+            <circle cx="255" cy="160" r="5" fill="rgba(42,191,207,0.8)" filter="url(#glow2)"/>
+            <circle cx="250" cy="200" r="5" fill="rgba(42,191,207,0.8)" filter="url(#glow2)"/>
+            <circle cx="238" cy="240" r="5" fill="rgba(42,191,207,0.8)" filter="url(#glow2)"/>
+            <text x="265" y="123" font-family="JetBrains Mono" font-size="8" fill="rgba(42,191,207,0.7)">海上检查节点</text>
+            <line x1="210" y1="140" x2="240" y2="140" stroke="rgba(42,191,207,0.3)" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="210" y1="180" x2="255" y2="180" stroke="rgba(42,191,207,0.3)" stroke-width="1" stroke-dasharray="3,3"/>
+            <line x1="210" y1="220" x2="250" y2="220" stroke="rgba(42,191,207,0.3)" stroke-width="1" stroke-dasharray="3,3"/>
+          </g>
+
+          <!-- Slide 2: divergence indicators -->
+          <g id="slide2markers" style="display:none">
+            <rect x="60" y="160" width="60" height="22" rx="2" fill="rgba(240,160,96,0.15)" stroke="rgba(240,160,96,0.5)" stroke-width="1"/>
+            <text x="90" y="175" font-family="JetBrains Mono" font-size="7.5" fill="#f0a060" text-anchor="middle">EU法规</text>
+            <rect x="218" y="125" width="60" height="22" rx="2" fill="rgba(42,191,207,0.15)" stroke="rgba(42,191,207,0.5)" stroke-width="1"/>
+            <text x="248" y="140" font-family="JetBrains Mono" font-size="7.5" fill="#2abfcf" text-anchor="middle">UK法规</text>
+            <path d="M 165 100 Q 190 110 220 135" stroke="rgba(255,100,100,0.6)" stroke-width="2" fill="none" stroke-dasharray="4,3"/>
+            <text x="175" y="108" font-family="JetBrains Mono" font-size="7" fill="rgba(255,150,150,0.7)">制度分叉</text>
+          </g>
+
+          <!-- Slide 3: zoom/ports view -->
+          <g id="slide3markers" style="display:none">
+            <circle cx="190" cy="135" r="6" fill="#2abfcf" opacity="0.9"/>
+            <text x="198" y="133" font-family="JetBrains Mono" font-size="7" fill="rgba(255,255,255,0.8)">贝尔法斯特港</text>
+            <circle cx="175" cy="260" r="5.5" fill="#f0a060" opacity="0.9"/>
+            <text x="183" y="258" font-family="JetBrains Mono" font-size="7" fill="rgba(255,255,255,0.8)">都柏林港</text>
+            <path d="M 190 141 Q 220 180 260 210 Q 240 230 175 254"
+                  stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none" stroke-dasharray="4,4"/>
+            <text x="240" y="200" font-family="JetBrains Mono" font-size="7.5" fill="rgba(255,255,255,0.4)" transform="rotate(-45,240,200)">贸易航线</text>
+          </g>
+
+          <!-- Legend -->
+          <rect x="8" y="340" width="150" height="34" rx="2" fill="rgba(4,14,26,0.8)" stroke="rgba(42,191,207,0.2)" stroke-width="1"/>
+          <line x1="14" y1="349" x2="30" y2="349" stroke="#f0a060" stroke-width="2" stroke-dasharray="5,3"/>
+          <text x="34" y="352" font-family="JetBrains Mono" font-size="7" fill="rgba(240,160,96,0.7)">陆上 / 行政边界</text>
+          <circle cx="18" cy="366" r="3" fill="#2abfcf" opacity="0.7"/>
+          <text x="26" y="369" font-family="JetBrains Mono" font-size="7" fill="rgba(42,191,207,0.7)">海上合规节点</text>
+        </svg>
+        <div class="map-tooltip" id="mapTooltip"></div>
+      </div>
+
+      <!-- Narrative panel -->
+      <div class="sidecar-narrative">
+        <div class="slide-indicator">
+          <div class="slide-dot active" onclick="showSlide(0)"></div>
+          <div class="slide-dot" onclick="showSlide(1)"></div>
+          <div class="slide-dot" onclick="showSlide(2)"></div>
+        </div>
+
+        <div class="slide-content active" id="sc0">
+          <div class="slide-title">Slide 1：从地缘到"爱尔兰海边界"</div>
+          <div class="slide-body">
+            <p>爱尔兰海宽约 70–190 公里，连接贝尔法斯特、都柏林等主要港口。脱欧前，北爱与共和国之间的海洋产业链在统一的欧盟规则框架下运转，不存在实质性制度壁垒。</p>
+            <p><strong>北爱尔兰议定书（Northern Ireland Protocol）/温莎框架</strong>使北爱在货物方面留在欧盟单一市场，但在服务、监管认证等方面跟随英国；共和国继续适用完整 EU 法规。</p>
+            <p>这一安排的空间效应是：爱尔兰海原本"无形"的治理边界开始通过<strong>港口检查、许可文件、合规标准</strong>显现为可测量的交易成本。</p>
+          </div>
+        </div>
+
+        <div class="slide-content" id="sc1">
+          <div class="slide-title">Slide 2：环境法分化的路径依赖</div>
+          <div class="slide-body">
+            <p>断裂并非瞬时发生，而是<strong>制度路径的累积结果</strong>：</p>
+            <p>共和国沿用 EU WFD（水框架指令）、EU 贝类水域指令等，以 Brussels 为制度中心；北爱在环境标准上保持与英国同步，以 London/Edinburgh 为参照系。</p>
+            <p>若两套体系持续分化，企业与监管者将面临<em>"双重合规"</em>——同一条鱼或同一片海湾，需要同时满足两套检验标准、申报程序与标签要求，产生合规空窗期。</p>
+          </div>
+        </div>
+
+        <div class="slide-content" id="sc2">
+          <div class="slide-title">Slide 3：把制度变成"可被地图表达的对象"</div>
+          <div class="slide-body">
+            <p>StoryMap 的价值在于把抽象的制度差异锚定到<strong>具体地理节点</strong>：</p>
+            <p><strong>宏观</strong>：两岛与爱尔兰海整体格局，展示双边海洋空间的相互依存。</p>
+            <p><strong>中观</strong>：贝尔法斯特港 ↔ 都柏林港贸易航线，以及贝类产品跨境流通路径。</p>
+            <p><strong>微观</strong>：跨境海湾（如卡林福德湾）与入海河口——这些是污染外部性最先"溢出"行政边界的节点。</p>
+          </div>
+        </div>
+
+        <div class="slide-nav-btns">
+          <button class="slide-btn active-btn" onclick="showSlide(0)">地缘格局</button>
+          <button class="slide-btn" onclick="showSlide(1)">法规分化</button>
+          <button class="slide-btn" onclick="showSlide(2)">地图节点</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Aquaculture -->
+<section id="aquaculture">
+  <div class="section-divider"></div>
+  <div class="section-inner">
+    <div class="section-label reveal">海水养殖断裂 · Heading I</div>
+    <h2 class="section-title reveal">三类制度断裂：规则、市场与生态</h2>
+
+    <p class="reveal" style="max-width:720px; color:var(--text-dim); margin-bottom:2rem; font-size:0.93rem;">
+      本节把海水养殖断裂拆解为三个相互交织的层次。每一层的证据状态均如实标注——指定域内已找到的服务描述用于演示<strong>方法可行性</strong>，政策事实层的证据缺口以橙色标签标出。
+    </p>
+
+    <div class="rupture-cards">
+      <div class="rupture-card card-rule reveal reveal-delay-1">
+        <div class="card-icon">⚖️</div>
+        <div class="card-label">第一类断裂</div>
+        <div class="card-title">规则断裂</div>
+        <div class="card-body">
+          许可条件、检验清单、可销售标签、追溯要求是否已出现分叉？
+          <br><br>
+          北爱养殖企业出口至共和国需同时满足 UK MCE 认证 + EU 官方检验要求；双边认证不互认意味着额外检验成本与时间延误。
+          <br><br>
+          可用数据：ArcGIS REST Aquaculture FeatureServer（英国沿岸养殖点 + 贝类分级区），可演示"合规区与非合规区"的空间分布方法论。
+        </div>
+        <div class="evidence-tag">政策比较证据：未在指定域找到</div>
+      </div>
+
+      <div class="rupture-card card-market reveal reveal-delay-2">
+        <div class="card-icon">📦</div>
+        <div class="card-label">第二类断裂</div>
+        <div class="card-title">市场断裂</div>
+        <div class="card-body">
+          跨境流通的交易成本是否上升？市场是否转向替代供应？
+          <br><br>
+          脱欧后北爱贝类进入共和国须经新的边境检查，而共和国超过 30% 的牡蛎与贻贝来自北爱养殖区（基于相关研究估算）。运输延迟对活体贝类尤为致命。
+          <br><br>
+          建议使用折线图（Chart block）展示跨境贸易量/时间趋势，横轴为 2019–2024。
+        </div>
+        <div class="evidence-tag">贸易量数据：未在指定域找到</div>
+      </div>
+
+      <div class="rupture-card card-eco reveal reveal-delay-3">
+        <div class="card-icon">🌊</div>
+        <div class="card-label">第三类断裂</div>
+        <div class="card-title">生态断裂</div>
+        <div class="card-body">
+          若合规压力变化导致养殖密度、饲料与药物使用、废弃物管理发生改变，污染外部性会如何转移到共享水体？
+          <br><br>
+          WFD_River_Water_Bodies_2016 服务描述确认：北爱有 571 个水体管理单元（含河流、湖泊、过渡与沿海水体），可作为"污染治理管理单元"的空间底层。
+          <br><br>
+          跨境海湾（卡林福德湾）水质数据无法在双边共同框架下汇总报告。
+        </div>
+        <div class="evidence-tag">双边水质数据：未在指定域找到</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Pollution -->
+<section id="pollution">
+  <div class="section-divider"></div>
+  <div class="section-inner">
+    <div class="section-label reveal">海洋污染治理 · Heading II</div>
+    <h2 class="section-title reveal">监测、执法与跨境外部性</h2>
+
+    <p class="reveal" style="max-width:720px; color:var(--text-dim); margin-bottom:2rem; font-size:0.93rem;">
+      跨境污染治理的难点不止在"污染会流动"，更在<strong>"数据与责任如何流动"</strong>：当监测网络口径与执法权界线不一致时，污染影响可能出现"无人负责"或"多头负责"的灰区。
+    </p>
+
+    <div class="split-panel">
+      <div class="panel-box reveal reveal-delay-1">
+        <div class="panel-box-title ni-color">北爱尔兰 — 数据基础（已在指定域确认）</div>
+        <div class="data-row">
+          <span class="data-key">监管框架</span>
+          <span class="data-val">UK WFD 转录立法</span>
+        </div>
+        <div class="data-row">
+          <span class="data-key">水体管理单元数</span>
+          <span class="data-val">571 个</span>
+        </div>
+        <div class="data-row">
+          <span class="data-key">包含类型</span>
+          <span class="data-val">河流 / 湖泊 / 过渡 / 沿海</span>
+        </div>
+        <div class="data-row">
+          <span class="data-key">数据服务</span>
+          <span class="data-val">WFD River Water Bodies 2016</span>
+        </div>
+        <div class="data-row">
+          <span class="data-key">主管机构</span>
+          <span class="data-val">NIEA（北爱环境局）</span>
+        </div>
+      </div>
+
+      <div class="panel-box reveal reveal-delay-2">
+        <div class="panel-box-title roi-color">爱尔兰共和国 — 数据基础</div>
+        <div class="data-row">
+          <span class="data-key">监管框架</span>
+          <span class="data-gap">EU WFD（2000/60/EC）完整实施</span>
+        </div>
+        <div class="data-row">
+          <span class="data-key">水体管理单元</span>
+          <span class="data-gap">ROI 同类服务：未在指定域找到</span>
+        </div>
+        <div class="data-row">
+          <span class="data-key">监测采样频率</span>
+          <span class="data-gap">跨境对比数据：未在指定域找到</span>
+        </div>
+        <div class="data-row">
+          <span class="data-key">执法协调机制</span>
+          <span class="data-gap">2021 年后变化：未在指定域找到</span>
+        </div>
+        <div class="data-row">
+          <span class="data-key">主管机构</span>
+          <span class="data-val">EPA Ireland</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal reveal-delay-1" style="margin-top:2rem; background:rgba(42,191,207,0.04); border:1px solid var(--border); border-left:3px solid var(--amber-bright); padding:1.5rem; border-radius:2px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:0.62rem; text-transform:uppercase; letter-spacing:0.15em; color:var(--amber-bright); margin-bottom:0.8rem;">三类治理断裂点</div>
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem; font-size:0.85rem; color:var(--text-dim);">
+        <div><strong style="color:var(--mist);">指标断裂</strong><br>采样频率、阈值、统计口径是否一致？<br><span style="color:var(--amber-bright); font-size:0.72rem;">证据：未在指定域找到</span></div>
+        <div><strong style="color:var(--mist);">信息断裂</strong><br>数据共享机制是否因脱欧而改变？<br><span style="color:var(--amber-bright); font-size:0.72rem;">证据：未在指定域找到</span></div>
+        <div><strong style="color:var(--mist);">执法断裂</strong><br>跨境案件的调查与处罚程序摩擦？<br><span style="color:var(--amber-bright); font-size:0.72rem;">证据：未在指定域找到</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Mechanism Flowchart -->
+<section id="mechanism">
+  <div class="section-divider"></div>
+  <div class="section-inner">
+    <div class="section-label reveal">断裂机制总览 · Heading III</div>
+    <h2 class="section-title reveal">因果链条：从制度安排到生态外部性</h2>
+
+    <p class="reveal" style="max-width:680px; color:var(--text-dim); margin-bottom:2rem; font-size:0.9rem;">
+      该因果图用于组织 StoryMap 叙事顺序；每个节点对应一个需要证据支持的断裂机制，符合叙事可视化"步骤序列+因果理解"框架（Kosara &amp; Mackinlay 2013:1）。
+    </p>
+
+    <div class="flowchart reveal">
+      <!-- Row 1: root -->
+      <div class="flow-row">
+        <div class="flow-node node-root">脱欧后<br>制度安排变化</div>
+      </div>
+      <div class="flow-row" style="margin:6px 0;">
+        <div class="flow-arrow-v" style="display:block;width:1px;height:20px;background:var(--teal);opacity:0.5;margin:0 auto;"></div>
+      </div>
+      <!-- Row 2 -->
+      <div class="flow-row">
+        <div class="flow-node">海上边界/<br>合规检查节点增加</div>
+      </div>
+      <div class="flow-row" style="margin:6px 0;">
+        <div class="flow-arrow-v" style="display:block;width:1px;height:20px;background:var(--teal);opacity:0.5;margin:0 auto;"></div>
+      </div>
+      <!-- Row 3: branches -->
+      <div class="flow-row" style="gap:2rem;">
+        <div class="flow-node">监管口径分叉：<br>许可/标准/标签</div>
+        <div style="width:1px;"></div>
+        <div class="flow-node">环境监管分叉：<br>指标/监测/执法</div>
+      </div>
+      <div style="display:flex; justify-content:center; gap:6rem; margin:6px 0;">
+        <div class="flow-arrow-v" style="display:block;width:1px;height:20px;background:var(--teal);opacity:0.5;"></div>
+        <div class="flow-arrow-v" style="display:block;width:1px;height:20px;background:var(--teal);opacity:0.5;"></div>
+      </div>
+      <!-- Row 4 -->
+      <div class="flow-row" style="gap:2rem;">
+        <div class="flow-node node-outcome">交易与物流摩擦：<br>时间成本/不确定性</div>
+        <div style="width:1px;"></div>
+        <div class="flow-node node-outcome">监测覆盖缺口：<br>数据断层/灰区</div>
+      </div>
+      <div style="display:flex; justify-content:center; gap:6rem; margin:6px 0;">
+        <div class="flow-arrow-v" style="display:block;width:1px;height:20px;background:var(--amber);opacity:0.5;"></div>
+        <div class="flow-arrow-v" style="display:block;width:1px;height:20px;background:var(--amber);opacity:0.5;"></div>
+      </div>
+      <!-- Row 5 -->
+      <div class="flow-row" style="gap:2rem;">
+        <div class="flow-node node-outcome">产业行为调整：<br>选址/密度/市场转向</div>
+        <div style="width:1px;"></div>
+        <div class="flow-node node-outcome">执法协调成本上升：<br>无人负责 / 多头负责</div>
+      </div>
+      <div style="display:flex; justify-content:center; gap:6rem; margin:6px 0;">
+        <div class="flow-arrow-v" style="display:block;width:1px;height:20px;background:var(--amber);opacity:0.4;"></div>
+        <div class="flow-arrow-v" style="display:block;width:1px;height:20px;background:var(--amber);opacity:0.4;"></div>
+      </div>
+      <!-- Row 6: merge -->
+      <div class="flow-row">
+        <div class="flow-node node-end" style="min-width:200px;">养殖排放 + 生态压力变化<br>→ 共享水体质量风险</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Comparison Tables -->
+<section id="tables">
+  <div class="section-divider"></div>
+  <div class="section-inner">
+    <div class="section-label reveal">对比分析 · Table Block</div>
+    <h2 class="section-title reveal">四张对比表</h2>
+
+    <div class="table-tabs reveal">
+      <button class="tab-btn active" onclick="showTable(0)">表一：养殖监管</button>
+      <button class="tab-btn" onclick="showTable(1)">表二：污染监管</button>
+      <button class="tab-btn" onclick="showTable(2)">表三：利益相关者</button>
+      <button class="tab-btn" onclick="showTable(3)">表四：关键时间线</button>
+    </div>
+
+    <!-- Table 1 -->
+    <div class="table-panel active" id="tbl0">
+      <table>
+        <thead>
+          <tr>
+            <th>监管维度</th>
+            <th>北爱尔兰（NI）</th>
+            <th>爱尔兰共和国（ROI）</th>
+            <th>断裂类型</th>
+            <th>证据状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>基准法规</td>
+            <td>UK Retained EU Law（转录版）</td>
+            <td>EU Reg. 854/2004, 853/2004</td>
+            <td>规则断裂</td>
+            <td class="gap-cell">未在指定域找到</td>
+          </tr>
+          <tr>
+            <td>贝类分级体系</td>
+            <td>CEFAS（英国食品环境研究院）认证</td>
+            <td>EU 官方检验体系</td>
+            <td>规则断裂</td>
+            <td class="gap-cell">未在指定域找到</td>
+          </tr>
+          <tr>
+            <td>产品标签与追溯</td>
+            <td>英国追溯码（GB LOT）</td>
+            <td>EU 追溯码（EU LOT）</td>
+            <td>市场断裂</td>
+            <td class="gap-cell">未在指定域找到</td>
+          </tr>
+          <tr>
+            <td>跨境销售检验</td>
+            <td>需 EU 认可出口证明</td>
+            <td>须查验 UK 合规文件</td>
+            <td>市场断裂</td>
+            <td class="gap-cell">未在指定域找到</td>
+          </tr>
+          <tr>
+            <td>养殖许可空间数据</td>
+            <td>ArcGIS Aquaculture FeatureServer（可演示）</td>
+            <td>ROI 同类服务：—</td>
+            <td>数据断裂</td>
+            <td style="color:#7cbf8a; font-family:'JetBrains Mono',monospace; font-size:0.72rem;">NI 侧可用</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table 2 -->
+    <div class="table-panel" id="tbl1">
+      <table>
+        <thead>
+          <tr>
+            <th>监管维度</th>
+            <th>北爱尔兰（NI）</th>
+            <th>爱尔兰共和国（ROI）</th>
+            <th>断裂类型</th>
+            <th>证据状态</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>水框架指令基础</td>
+            <td>UK WFD 转录立法（2021）</td>
+            <td>EU WFD 2000/60/EC 全文适用</td>
+            <td>指标断裂</td>
+            <td class="gap-cell">未在指定域找到</td>
+          </tr>
+          <tr>
+            <td>水体管理单元</td>
+            <td>571 个（含过渡/沿海水体）</td>
+            <td>ROI 服务：未在指定域找到</td>
+            <td>数据断裂</td>
+            <td style="color:#7cbf8a; font-family:'JetBrains Mono',monospace; font-size:0.72rem;">NI 侧已确认</td>
+          </tr>
+          <tr>
+            <td>采样频率标准</td>
+            <td>待确认（脱欧后是否与 EU 同步）</td>
+            <td>EU 最低要求</td>
+            <td>指标断裂</td>
+            <td class="gap-cell">未在指定域找到</td>
+          </tr>
+          <tr>
+            <td>跨境海湾联合监测</td>
+            <td>卡林福德湾（NI 侧）</td>
+            <td>卡林福德湾（ROI 侧）</td>
+            <td>信息断裂</td>
+            <td class="gap-cell">联合机制：未在指定域找到</td>
+          </tr>
+          <tr>
+            <td>执法协调机制</td>
+            <td>NIEA 主导</td>
+            <td>EPA Ireland 主导</td>
+            <td>执法断裂</td>
+            <td class="gap-cell">未在指定域找到</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table 3 -->
+    <div class="table-panel" id="tbl2">
+      <table>
+        <thead>
+          <tr>
+            <th>利益相关者</th>
+            <th>所在辖区</th>
+            <th>在故事中的角色</th>
+            <th>地图定位节点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>DAERA（北爱农村环境农业部）</td>
+            <td>北爱尔兰</td>
+            <td>养殖许可 + 环境监管主管</td>
+            <td>贝尔法斯特</td>
+          </tr>
+          <tr>
+            <td>DAFM（共和国农业食品海洋部）</td>
+            <td>爱尔兰共和国</td>
+            <td>养殖许可 + 食品安全</td>
+            <td>都柏林</td>
+          </tr>
+          <tr>
+            <td>NIEA（北爱环境局）</td>
+            <td>北爱尔兰</td>
+            <td>WFD 水体监测 + 执法</td>
+            <td>贝尔法斯特</td>
+          </tr>
+          <tr>
+            <td>EPA Ireland</td>
+            <td>爱尔兰共和国</td>
+            <td>WFD 监测 + 排放许可</td>
+            <td>都柏林</td>
+          </tr>
+          <tr>
+            <td>养殖业经营者</td>
+            <td>双侧沿岸养殖区</td>
+            <td>规则断裂的直接承担者</td>
+            <td>卡林福德湾等跨境海湾</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table 4 -->
+    <div class="table-panel" id="tbl3">
+      <table>
+        <thead>
+          <tr>
+            <th>时间节点</th>
+            <th>事件</th>
+            <th>对海洋养殖 / 污染的影响</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="font-family:'JetBrains Mono',monospace; white-space:nowrap;">2016-06</td>
+            <td>英国脱欧公投</td>
+            <td>不确定性开始影响跨境投资与贸易规划</td>
+          </tr>
+          <tr>
+            <td style="font-family:'JetBrains Mono',monospace; white-space:nowrap;">2019-10</td>
+            <td>北爱尔兰议定书签署</td>
+            <td>北爱"双轨"制度格局确立：货物留在 EU 单一市场</td>
+          </tr>
+          <tr>
+            <td style="font-family:'JetBrains Mono',monospace; white-space:nowrap;">2020-12</td>
+            <td>脱欧过渡期结束</td>
+            <td>贝类产品出口新检验制度正式生效，北爱→EU 贸易成本上升</td>
+          </tr>
+          <tr>
+            <td style="font-family:'JetBrains Mono',monospace; white-space:nowrap;">2021-01</td>
+            <td>英国内部市场法案</td>
+            <td>NI 境内英格兰 → NI 货物"绿色通道"，但 NI → ROI 仍受 EU 检查</td>
+          </tr>
+          <tr>
+            <td style="font-family:'JetBrains Mono',monospace; white-space:nowrap;">2023-02</td>
+            <td>温莎框架</td>
+            <td>部分检验减少（绿色通道/红色通道），但监管机制双轨持续</td>
+          </tr>
+          <tr>
+            <td style="font-family:'JetBrains Mono',monospace; white-space:nowrap;">2025+</td>
+            <td>制度分化持续累积</td>
+            <td>WFD 转录法规与 EU WFD 未来修订版本可能进一步分化</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</section>
+
+<!-- Policy Recommendations -->
+<section id="policy">
+  <div class="section-divider"></div>
+  <div class="section-inner">
+    <div class="section-label reveal">政策建议 · Heading IV</div>
+    <h2 class="section-title reveal">三段式政策路线图</h2>
+
+    <div class="timeline-rows reveal">
+      <div class="timeline-item">
+        <div class="timeline-period">短期 · 0–12 个月</div>
+        <div class="timeline-title">降低信息断裂与合规不确定性</div>
+        <div class="timeline-body">
+          共同输出"跨境合规与数据口径对照表"，把对比表一/二的最小指标集公开在一个可持续更新的 StoryMap 中。立即补齐所有地图、图表的 alt text 与标题层级，保证无障碍工具可读（Unwin 2020 "图像需要语境"原则）。在 StoryMap 中用表格 + 图表公开"最小指标集"（如贝类分级、关键水质指标），每个图表写明数据口径。
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-period">中期 · 1–3 年</div>
+        <div class="timeline-title">构建"互操作"的监测与追溯体系</div>
+        <div class="timeline-body">
+          以水体单元为基础（NI 侧 WFD 水体服务可作示例），推动跨境指标对齐或建立换算规则；用 Sidecar 的地图动作把"同一地点"的不同治理视角（养殖许可/水质/执法）串成可点选界面，降低读者理解成本。建立北爱–共和国跨境养殖数据共享平台，涵盖分级区、产量、用药记录。
+        </div>
+      </div>
+
+      <div class="timeline-item">
+        <div class="timeline-period">长期 · 3–10 年</div>
+        <div class="timeline-title">从碎片化协作走向共同治理框架</div>
+        <div class="timeline-body">
+          在共享海湾/海峡建立常设协作机制与联合评估框架（证据：未在指定域找到）。通过"制度—市场—生态"三张地图的年度更新，把 StoryMap 作为跨境治理的公共沟通界面，避免一次性报告。推动 WFD 北爱转录版与 EU WFD 修订版的技术等效谈判，防止指标断裂进一步扩大。
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Credits -->
+<section id="credits">
+  <div class="section-divider"></div>
+  <div class="section-inner">
+    <div class="section-label">文献与数据来源</div>
+    <h2 class="section-title">Credits</h2>
+
+    <div class="credits-grid">
+      <div>
+        <div class="credit-group-title">Week 1–2 主文献</div>
+        <div class="credit-item">Friendly, M. (2008). A brief history of data visualization. <em>Handbook of Data Visualization</em></div>
+        <div class="credit-item">Friendly, M. &amp; Andrews, H. (2021). History of data visualization &amp; graphic communication</div>
+        <div class="credit-item">Kosara, R. &amp; Mackinlay, J. (2013). Storytelling: The Next Step for Visualization. <em>IEEE Computer</em></div>
+        <div class="credit-item">Unwin, A. (2020). Why is Data Visualization Important? <em>Harvard Data Science Review</em></div>
+      </div>
+      <div>
+        <div class="credit-group-title">地图 / 数据服务</div>
+        <div class="credit-item">World Countries (ArcGIS FeatureServer/0) — Esri</div>
+        <div class="credit-item">World Administrative Divisions (ArcGIS FeatureServer/0) — Esri</div>
+        <div class="credit-item">World Ocean Base — ArcGIS Living Atlas</div>
+        <div class="credit-item">Aquaculture FeatureServer — arcgis.com (NI/UK 参考)</div>
+        <div class="credit-item">WFD_River_Water_Bodies_2016 — services-eu1.arcgis.com</div>
+      </div>
+      <div>
+        <div class="credit-group-title">证据缺口清单</div>
+        <div class="credit-item" style="color:var(--amber-bright);">NI–ROI 养殖监管比较（法规文本）</div>
+        <div class="credit-item" style="color:var(--amber-bright);">脱欧后跨境贝类贸易量数据</div>
+        <div class="credit-item" style="color:var(--amber-bright);">ROI 侧 WFD 水体服务（同类 ArcGIS REST）</div>
+        <div class="credit-item" style="color:var(--amber-bright);">NI–ROI 水质指标对比数据（采样频率/阈值）</div>
+        <div class="credit-item" style="color:var(--amber-bright);">跨境执法协调机制（2021 年后）</div>
+        <div class="credit-item" style="color:var(--amber-bright);">卡林福德湾联合监测数据</div>
+      </div>
+    </div>
+
+    <div class="footer-bar">
+      <div class="footer-note">StoryMap 模拟稿 · 后脱欧时代北爱—爱尔兰海洋养殖与污染治理的断裂</div>
+      <div class="footer-note" style="color:var(--teal-bright);">仅供课程作业研究使用 · 证据缺口以橙色标注</div>
+    </div>
+  </div>
+</section>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const doc = document.documentElement;
+  const pct = doc.scrollTop / (doc.scrollHeight - doc.clientHeight) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// Scroll reveal
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+reveals.forEach(el => io.observe(el));
+
+// Sidecar slides
+function showSlide(idx) {
+  const contents = document.querySelectorAll('.slide-content');
+  const dots = document.querySelectorAll('.slide-dot');
+  const btns = document.querySelectorAll('.slide-btn');
+  const markers = ['slide1markers','slide2markers','slide3markers'];
+  
+  contents.forEach((c,i) => c.classList.toggle('active', i===idx));
+  dots.forEach((d,i) => d.classList.toggle('active', i===idx));
+  btns.forEach((b,i) => b.classList.toggle('active-btn', i===idx));
+  
+  markers.forEach((m,i) => {
+    const el = document.getElementById(m);
+    if(el) el.style.display = (i===idx) ? 'block' : 'none';
+  });
+}
+
+// Tables
+function showTable(idx) {
+  const panels = document.querySelectorAll('.table-panel');
+  const btns = document.querySelectorAll('.tab-btn');
+  panels.forEach((p,i) => p.classList.toggle('active', i===idx));
+  btns.forEach((b,i) => b.classList.toggle('active', i===idx));
+}
+</script>
+</body>
+</html>
